@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Added ###
+.DS_Store
+.mvn/
+mvnw
+mvnw.cmd
