@@ -1,6 +1,7 @@
 package com.example.dailyspent.phone;
 
 import com.example.dailyspent.user.UserModel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 
@@ -18,6 +19,7 @@ public class PhoneModel {
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;

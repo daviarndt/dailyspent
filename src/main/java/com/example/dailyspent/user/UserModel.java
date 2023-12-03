@@ -1,6 +1,9 @@
 package com.example.dailyspent.user;
 
 import com.example.dailyspent.phone.PhoneModel;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import java.util.List;
@@ -21,6 +24,8 @@ public class UserModel {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PhoneModel> phoneNumbers;
 
