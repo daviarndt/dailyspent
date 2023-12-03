@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Transactional
-    @PostMapping
+    @PostMapping(value = "/saveUser")
     public ResponseEntity<UserModel> saveUser(@RequestBody UserModel user) {
         try {
-            UserModel savedUser = userRepository.save(user);
+            UserModel savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
         }
         catch (Exception e) {
@@ -28,15 +28,10 @@ public class UserController {
     }
 
     @Transactional
-    @PostMapping(value = "/userWithPhone")
+    @PostMapping(value = "/saveUserWithPhone")
     public ResponseEntity<UserModel> saveUserWithPhone(@RequestBody UserModel user) {
         try {
-            if (user.getPhoneNumbers() != null) {
-                for (PhoneModel phone : user.getPhoneNumbers()) {
-                    phone.setUser(user);
-                }
-            }
-            UserModel savedUser = userRepository.save(user);
+            UserModel savedUser = userService.saveUserWithPhone(user);
             return new ResponseEntity<>(savedUser , HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,8 +1,6 @@
 package com.example.dailyspent.user;
 
 import com.example.dailyspent.phone.PhoneModel;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
@@ -12,7 +10,6 @@ import java.util.List;
 @Entity(name = "user")
 @EqualsAndHashCode(of = "userId")
 public class UserModel {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
@@ -70,5 +67,4 @@ public class UserModel {
     public void setPhoneNumbers(List<PhoneModel> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
     }
-
 }
