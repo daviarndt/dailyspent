@@ -2,27 +2,25 @@ package com.example.dailyspent.phone;
 
 import com.example.dailyspent.user.UserModel;
 import jakarta.persistence.*;
-
-import java.util.Objects;
+import lombok.EqualsAndHashCode;
 
 @Table(name = "phone")
 @Entity(name = "phone")
+@EqualsAndHashCode(of = "phoneId")
 public class PhoneModel {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long phoneId;
+
+    @Column(name = "country_code", nullable = false)
     private String countryCode;
+
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;
-
-    public PhoneModel(Long phoneId, String countryCode, String phoneNumber, UserModel user) {
-        this.phoneId = phoneId;
-        this.countryCode = countryCode;
-        this.phoneNumber = phoneNumber;
-        this.user = user;
-    }
 
     public PhoneModel() {
     }
@@ -57,18 +55,5 @@ public class PhoneModel {
 
     public void setUser(UserModel user) {
         this.user = user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PhoneModel that = (PhoneModel) o;
-        return Objects.equals(phoneId, that.phoneId) && Objects.equals(countryCode, that.countryCode) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(user, that.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(phoneId, countryCode, phoneNumber, user);
     }
 }

@@ -2,28 +2,27 @@ package com.example.dailyspent.user;
 
 import com.example.dailyspent.phone.PhoneModel;
 import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
 import java.util.List;
-import java.util.Objects;
 
 @Table(name = "user")
 @Entity(name = "user")
+@EqualsAndHashCode(of = "userId")
 public class UserModel {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<PhoneModel> phoneNumbers;
-
-    public UserModel(Long userId, String firstName, String lastName, String email, List<PhoneModel> phoneNumbers) {
-        this.userId = userId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.phoneNumbers = phoneNumbers;
-    }
 
     public UserModel() {}
 
@@ -67,16 +66,4 @@ public class UserModel {
         this.phoneNumbers = phoneNumbers;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserModel userModel = (UserModel) o;
-        return Objects.equals(userId, userModel.userId) && Objects.equals(firstName, userModel.firstName) && Objects.equals(lastName, userModel.lastName) && Objects.equals(email, userModel.email) && Objects.equals(phoneNumbers, userModel.phoneNumbers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(userId, firstName, lastName, email, phoneNumbers);
-    }
 }
