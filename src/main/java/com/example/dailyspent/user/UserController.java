@@ -1,6 +1,6 @@
 package com.example.dailyspent.user;
 
-import com.example.dailyspent.phone.PhoneModel;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ public class UserController {
 
     @Transactional
     @PostMapping(value = "/saveUser")
-    public ResponseEntity<UserModel> saveUser(@RequestBody UserModel user) {
+    public ResponseEntity<UserModel> saveUser(@Valid @RequestBody UserModel user) {
         try {
             UserModel savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
@@ -29,7 +29,7 @@ public class UserController {
 
     @Transactional
     @PostMapping(value = "/saveUserWithPhone")
-    public ResponseEntity<UserModel> saveUserWithPhone(@RequestBody UserModel user) {
+    public ResponseEntity<UserModel> saveUserWithPhone(@Valid @RequestBody UserModel user) {
         try {
             UserModel savedUser = userService.saveUserWithPhone(user);
             return new ResponseEntity<>(savedUser , HttpStatus.CREATED);

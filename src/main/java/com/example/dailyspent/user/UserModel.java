@@ -3,6 +3,9 @@ package com.example.dailyspent.user;
 import com.example.dailyspent.phone.PhoneModel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
 import java.util.List;
 
@@ -13,17 +16,22 @@ public class UserModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    @NotBlank(message = "First Name is mandatory")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
+    @NotBlank(message = "Last Name is mandatory")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
+    @NotBlank(message = "Email is mandatory")
+    @Email
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Valid
     private List<PhoneModel> phoneNumbers;
 
     public UserModel() {}

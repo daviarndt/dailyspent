@@ -3,6 +3,8 @@ package com.example.dailyspent.phone;
 import com.example.dailyspent.user.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 
 @Table(name = "phone")
@@ -13,9 +15,12 @@ public class PhoneModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long phoneId;
 
+    @Size(min = 1, max = 4)
+    @NotBlank(message = "Country Code is mandatory")
     @Column(name = "country_code", nullable = false)
     private String countryCode;
 
+    @NotBlank(message = "Phone Number is mandatory")
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
