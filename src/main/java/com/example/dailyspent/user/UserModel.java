@@ -29,6 +29,9 @@ public class UserModel {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive = true;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Valid
@@ -66,6 +69,14 @@ public class UserModel {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     public List<PhoneModel> getPhoneNumbers() {

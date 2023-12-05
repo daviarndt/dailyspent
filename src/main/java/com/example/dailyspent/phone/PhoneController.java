@@ -44,7 +44,7 @@ public class PhoneController {
 
     @Transactional
     @DeleteMapping(value = "/deletePhone/{phoneId}")
-    public ResponseEntity<UserModel> deletePhone(@PathVariable Long phoneId) {
+    public ResponseEntity<UserModel> deletePhoneById(@PathVariable Long phoneId) {
         try {
             if (!phoneId.toString().isBlank()) {
                 Optional<PhoneModel> phone = phoneService.getPhoneById(phoneId);
