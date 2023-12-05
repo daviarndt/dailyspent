@@ -26,4 +26,12 @@ public class PhoneService {
             return Optional.empty();
         }
     }
+
+    public Optional<PhoneModel> getPhoneById(Long phoneId) {
+        return phoneRepository.findById(phoneId);
+    }
+
+    public void deletePhoneById(Long phoneId) {
+        phoneRepository.deleteById(phoneId);
+    }
 }
