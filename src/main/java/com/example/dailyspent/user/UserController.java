@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("user")
 public class UserController {
@@ -28,11 +30,17 @@ public class UserController {
     }
 
     @Transactional
-    @PostMapping(value = "/saveUserWithPhone")
-    public ResponseEntity<UserModel> saveUserWithPhone(@Valid @RequestBody UserModel user) {
+    @PutMapping(value = "/deactivateUser/{userId}")
+    public ResponseEntity<UserModel> deactivateUser(@PathVariable Long userId) {
         try {
-            UserModel savedUser = userService.saveUserWithPhone(user);
-            return new ResponseEntity<>(savedUser , HttpStatus.CREATED);
+            Optional<UserModel> user = userService.getUserById(userId);
+            if (user.isPresent()) {
+                UserModel userUpdated = user.get();
+                userUpdated.setActive(false);
+                return new ResponseEntity<>(userService.saveUser(userUpdated), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

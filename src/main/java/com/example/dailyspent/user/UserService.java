@@ -15,15 +15,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public UserModel saveUserWithPhone(UserModel user) {
-        if (user.getPhoneNumbers() != null) {
-            for (PhoneModel phone : user.getPhoneNumbers()) {
-                phone.setUser(user);
-            }
-        }
-        return userRepository.save(user);
-    }
-
     public Optional<UserModel> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
