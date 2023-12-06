@@ -1,5 +1,6 @@
 package com.example.dailyspent.user;
 
+import com.example.dailyspent.expense.ExpenseModel;
 import com.example.dailyspent.phone.PhoneModel;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -36,6 +37,11 @@ public class UserModel {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Valid
     private List<PhoneModel> phoneNumbers;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @Valid
+    private List<ExpenseModel> expenses;
 
     public UserModel() {}
 
@@ -85,5 +91,13 @@ public class UserModel {
 
     public void setPhoneNumbers(List<PhoneModel> phoneNumbers) {
         this.phoneNumbers = phoneNumbers;
+    }
+
+    public List<ExpenseModel> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(List<ExpenseModel> expenses) {
+        this.expenses = expenses;
     }
 }
