@@ -1,5 +1,6 @@
 package com.example.dailyspent.expense;
 
+import com.example.dailyspent.expense.dto.ExpenseDTO;
 import com.example.dailyspent.user.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -19,15 +20,15 @@ public class ExpenseModel {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long expenseId;
 
-    @NotBlank(message = "Amount is mandatory")
+    @NotNull
     @Column(name = "amount", nullable = false)
     private BigDecimal amount;
 
-    @NotNull()
+    @NotNull
     @Column(name = "category")
     private String category;
 
-    @NotBlank
+    @NotNull
     @Column(name = "created_date", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdDate = LocalDateTime.now();
@@ -38,6 +39,11 @@ public class ExpenseModel {
     private UserModel user;
 
     public ExpenseModel() {
+    }
+
+    public ExpenseModel(ExpenseDTO expenseDTO) {
+        this.amount = expenseDTO.amount();
+        this.category = expenseDTO.category();
     }
 
     public Long getExpenseId() {
