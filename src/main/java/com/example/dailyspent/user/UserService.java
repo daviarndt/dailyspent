@@ -30,4 +30,16 @@ public class UserService {
             return Optional.empty();
         }
     }
+
+    public Optional<UserModel> activateUser(Long userId) {
+        Optional<UserModel> user = getUserById(userId);
+        if (user.isPresent()) {
+            UserModel userUpdated = user.get();
+            userUpdated.setActive(true);
+            saveUser(userUpdated);
+            return Optional.of(userUpdated);
+        } else {
+            return Optional.empty();
+        }
+    }
 }

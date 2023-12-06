@@ -48,4 +48,24 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Transactional
+    @PutMapping(value = "/activateUser/{userId}")
+    public ResponseEntity<UserModel> activateUser(@PathVariable Long userId) {
+        try {
+            if (!userId.toString().isBlank()) {
+                Optional<UserModel> userOptional = userService.activateUser(userId);
+                if (userOptional.isPresent()) {
+                    return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
