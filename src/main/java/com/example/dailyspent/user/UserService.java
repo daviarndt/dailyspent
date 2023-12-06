@@ -18,4 +18,16 @@ public class UserService {
     public Optional<UserModel> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
+
+    public Optional<UserModel> deactivateUser(Long userId) {
+        Optional<UserModel> user = getUserById(userId);
+        if (user.isPresent()) {
+            UserModel userUpdated = user.get();
+            userUpdated.setActive(false);
+            saveUser(userUpdated);
+            return Optional.of(userUpdated);
+        } else {
+            return Optional.empty();
+        }
+    }
 }
