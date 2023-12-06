@@ -33,9 +33,13 @@ public class UserController {
     @PutMapping(value = "/deactivateUser/{userId}")
     public ResponseEntity<UserModel> deactivateUser(@PathVariable Long userId) {
         try {
-            Optional<UserModel> userOptional = userService.deactivateUser(userId);
-            if (userOptional.isPresent()) {
-                return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+            if (!userId.toString().isBlank()) {
+                Optional<UserModel> userOptional = userService.deactivateUser(userId);
+                if (userOptional.isPresent()) {
+                    return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
