@@ -4,6 +4,9 @@ import com.example.dailyspent.exceptions.UserNotFoundException;
 import com.example.dailyspent.expense.dto.ExpenseDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,10 +38,10 @@ public class ExpenseController {
     }
 
     @GetMapping(value = "/getExpenses/{userId}")
-    public ResponseEntity<List<ExpenseModel>> getExpensesByUser(@PathVariable Long userId) {
+    public ResponseEntity<Page<ExpenseModel>> getExpensesByUser(@PathVariable Long userId, @PageableDefault(size = 25) Pageable pageable) {
         try {
             if (!userId.toString().isBlank() && userId > 0) {
-                List<ExpenseModel> expenses = expenseService.getExpensesByUser(userId);
+                Page<ExpenseModel> expenses = expenseService.getExpensesByUser(userId, pageable);
                 if (expenses.isEmpty()) {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
                 }

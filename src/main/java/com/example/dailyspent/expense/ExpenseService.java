@@ -5,6 +5,8 @@ import com.example.dailyspent.expense.dto.ExpenseDTO;
 import com.example.dailyspent.user.UserModel;
 import com.example.dailyspent.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +28,8 @@ public class ExpenseService {
         return expenseRepository.save(expense);
     }
 
-    public List<ExpenseModel> getExpensesByUser(Long userId) {
+    public Page<ExpenseModel> getExpensesByUser(Long userId, Pageable pageable) {
         UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
-        return expenseRepository.findAllByUserUserId(userId);
+        return expenseRepository.findAllByUserUserId(userId, pageable);
     }
 }
