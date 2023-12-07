@@ -7,7 +7,7 @@ import com.example.dailyspent.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
 @Service
 public class ExpenseService {
@@ -24,5 +24,10 @@ public class ExpenseService {
         ExpenseModel expense = new ExpenseModel(expenseDTO);
         expense.setUser(user);
         return expenseRepository.save(expense);
+    }
+
+    public List<ExpenseModel> getExpensesByUser(Long userId) {
+        UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
+        return expenseRepository.findAllByUserUserId(userId);
     }
 }

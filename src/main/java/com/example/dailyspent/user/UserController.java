@@ -33,7 +33,7 @@ public class UserController {
     @PutMapping(value = "/deactivateUser/{userId}")
     public ResponseEntity<UserModel> deactivateUser(@PathVariable Long userId) {
         try {
-            if (!userId.toString().isBlank()) {
+            if (!userId.toString().isBlank() && userId > 0) {
                 Optional<UserModel> userOptional = userService.deactivateUser(userId);
                 if (userOptional.isPresent()) {
                     return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);
@@ -53,7 +53,7 @@ public class UserController {
     @PutMapping(value = "/activateUser/{userId}")
     public ResponseEntity<UserModel> activateUser(@PathVariable Long userId) {
         try {
-            if (!userId.toString().isBlank()) {
+            if (!userId.toString().isBlank() && userId > 0) {
                 Optional<UserModel> userOptional = userService.activateUser(userId);
                 if (userOptional.isPresent()) {
                     return new ResponseEntity<>(userOptional.get(), HttpStatus.OK);

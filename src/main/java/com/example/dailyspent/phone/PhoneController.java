@@ -25,7 +25,7 @@ public class PhoneController {
     @PostMapping(value = "/savePhone/{userId}")
     public ResponseEntity<UserModel> savePhone(@Valid @RequestBody PhoneModel phone, @PathVariable Long userId) {
         try {
-            if (!userId.toString().isBlank()) {
+            if (!userId.toString().isBlank() && userId > 0) {
                 Optional<UserModel> user = phoneService.savePhone(phone, userId);
                 if (user.isPresent()) {
                     return new ResponseEntity<>(user.get(), HttpStatus.OK);
@@ -46,7 +46,7 @@ public class PhoneController {
     @DeleteMapping(value = "/deletePhone/{phoneId}")
     public ResponseEntity<UserModel> deletePhoneById(@PathVariable Long phoneId) {
         try {
-            if (!phoneId.toString().isBlank()) {
+            if (!phoneId.toString().isBlank() && phoneId > 0) {
                 Optional<PhoneModel> phone = phoneService.getPhoneById(phoneId);
                 if (phone.isPresent()) {
                     phoneService.deletePhoneById(phoneId);
