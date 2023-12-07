@@ -1,7 +1,6 @@
 package com.example.dailyspent.user;
 
-import com.example.dailyspent.exceptions.UserAlreadyExistsException;
-import com.example.dailyspent.phone.PhoneModel;
+import com.example.dailyspent.utils.exceptions.UserAlreadyExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Optional;

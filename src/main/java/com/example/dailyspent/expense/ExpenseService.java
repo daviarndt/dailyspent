@@ -1,6 +1,6 @@
 package com.example.dailyspent.expense;
 
-import com.example.dailyspent.exceptions.UserNotFoundException;
+import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import com.example.dailyspent.expense.dto.ExpenseDTO;
 import com.example.dailyspent.user.UserModel;
 import com.example.dailyspent.user.UserService;
@@ -8,8 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class ExpenseService {

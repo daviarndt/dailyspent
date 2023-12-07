@@ -1,6 +1,6 @@
 package com.example.dailyspent.user;
 
-import com.example.dailyspent.exceptions.UserAlreadyExistsException;
+import com.example.dailyspent.utils.exceptions.UserAlreadyExistsException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

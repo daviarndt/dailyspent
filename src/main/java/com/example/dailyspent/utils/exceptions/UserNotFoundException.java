@@ -1,4 +1,4 @@
-package com.example.dailyspent.exceptions;
+package com.example.dailyspent.utils.exceptions;
 
 public class UserNotFoundException extends RuntimeException {
 
