@@ -27,7 +27,7 @@ public class UserService {
         if (user.isPresent()) {
             UserModel userUpdated = user.get();
             userUpdated.setActive(false);
-            saveUser(userUpdated);
+            updateUser(userUpdated);
             return Optional.of(userUpdated);
         } else {
             return Optional.empty();
@@ -39,11 +39,15 @@ public class UserService {
         if (user.isPresent()) {
             UserModel userUpdated = user.get();
             userUpdated.setActive(true);
-            saveUser(userUpdated);
+            updateUser(userUpdated);
             return Optional.of(userUpdated);
         } else {
             return Optional.empty();
         }
+    }
+
+    public UserModel updateUser(UserModel user) {
+        return userRepository.save(user);
     }
 
     public boolean userExistsByEmail(String email) {
