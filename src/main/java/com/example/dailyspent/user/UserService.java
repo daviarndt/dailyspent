@@ -1,5 +1,6 @@
 package com.example.dailyspent.user;
 
+import com.example.dailyspent.exceptions.UserAlreadyExistsException;
 import com.example.dailyspent.phone.PhoneModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ public class UserService {
     UserRepository userRepository;
 
     public UserModel saveUser(UserModel user) {
+        if (userExistsByEmail(user.getEmail())) {
+            throw new UserAlreadyExistsException();
+        }
         return userRepository.save(user);
     }
 
@@ -41,5 +45,10 @@ public class UserService {
         } else {
             return Optional.empty();
         }
+    }
+
+    public boolean userExistsByEmail(String email) {
+        Optional<UserModel> user = userRepository.findByEmail(email);
+        return user.isPresent() ? true : false;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.dailyspent.user;
 
+import com.example.dailyspent.exceptions.UserAlreadyExistsException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,9 @@ public class UserController {
         try {
             UserModel savedUser = userService.saveUser(user);
             return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+        }
+        catch (UserAlreadyExistsException userAlreadyExistsException) {
+            return new ResponseEntity(userAlreadyExistsException.getMessage(), HttpStatus.BAD_REQUEST);
         }
         catch (Exception e) {
             e.printStackTrace();
