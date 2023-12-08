@@ -2,6 +2,8 @@ package com.example.dailyspent.phone;
 
 import com.example.dailyspent.user.UserModel;
 import com.example.dailyspent.user.UserService;
+import com.example.dailyspent.utils.exceptions.PhoneNotFoundException;
+import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +18,21 @@ public class PhoneService {
     @Autowired
     UserService userService;
 
-    public Optional<UserModel> savePhone(PhoneModel phone, Long userId) {
-        Optional<UserModel> userOptional = userService.getUserById(userId);
-        if (userOptional.isPresent()) {
-            phone.setUser(userOptional.get());
-            phoneRepository.save(phone);
-            return Optional.of(userOptional.get());
-        } else {
-            return Optional.empty();
-        }
+    public UserModel savePhone(PhoneModel phone, Long userId) {
+        UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
+        phone.setUser(user);
+        phoneRepository.save(phone);
+        return user;
     }
 
     public Optional<PhoneModel> getPhoneById(Long phoneId) {
         return phoneRepository.findById(phoneId);
     }
 
-    public void deletePhoneById(Long phoneId) {
+    public UserModel deletePhoneById(Long phoneId) {
+        PhoneModel phone = getPhoneById(phoneId).orElseThrow(PhoneNotFoundException::new);
+        UserModel user = userService.getUserById(phone.getUser().getUserId()).orElseThrow(UserNotFoundException::new);
         phoneRepository.deleteById(phoneId);
+        return user;
     }
 }
