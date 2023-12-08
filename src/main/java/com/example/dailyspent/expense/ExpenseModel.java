@@ -1,10 +1,10 @@
 package com.example.dailyspent.expense;
 
-import com.example.dailyspent.expense.dto.ExpenseDTO;
+import com.example.dailyspent.expense.dto.DescribeExpenseDTO;
+import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.user.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.CreatedDate;
@@ -41,7 +41,7 @@ public class ExpenseModel {
     public ExpenseModel() {
     }
 
-    public ExpenseModel(ExpenseDTO expenseDTO) {
+    public ExpenseModel(SaveExpenseDTO expenseDTO) {
         this.amount = expenseDTO.amount();
         this.category = expenseDTO.category();
     }

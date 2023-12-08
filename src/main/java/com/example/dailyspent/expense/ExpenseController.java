@@ -1,7 +1,8 @@
 package com.example.dailyspent.expense;
 
+import com.example.dailyspent.expense.dto.DescribeExpenseDTO;
 import com.example.dailyspent.utils.exceptions.IdIsIllegalException;
-import com.example.dailyspent.expense.dto.ExpenseDTO;
+import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.utils.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,20 +23,20 @@ public class ExpenseController {
 
     @Transactional
     @PostMapping(value = "/{userId}")
-    public ResponseEntity<ApiResponse<ExpenseModel>> saveExpense(@Valid @RequestBody ExpenseDTO expenseDTO, @PathVariable Long userId) {
+    public ResponseEntity<ApiResponse<DescribeExpenseDTO>> saveExpense(@Valid @RequestBody SaveExpenseDTO saveExpenseDTO, @PathVariable Long userId) {
         if (userId.toString().isBlank() && userId <= 0) {
             throw new IdIsIllegalException();
         }
-        ExpenseModel expense = expenseService.saveExpense(expenseDTO, userId);
+        DescribeExpenseDTO expense = expenseService.saveExpense(saveExpenseDTO, userId);
         return new ResponseEntity<>(ApiResponse.success(expense), HttpStatus.CREATED);
     }
 
     @GetMapping(value = "/{userId}")
-    public ResponseEntity<ApiResponse<Page<ExpenseModel>>> getExpensesByUser(@PathVariable Long userId, @PageableDefault(size = 25) Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<DescribeExpenseDTO>>> getExpensesByUser(@PathVariable Long userId, @PageableDefault(size = 25) Pageable pageable) {
         if (userId.toString().isBlank() && userId <= 0) {
             throw new IdIsIllegalException();
         }
-        Page<ExpenseModel> expenses = expenseService.getExpensesByUser(userId, pageable);
+        Page<DescribeExpenseDTO> expenses = expenseService.getExpensesByUser(userId, pageable);
         if (expenses.isEmpty()) {
             return new ResponseEntity<>(ApiResponse.noContent(), HttpStatus.NO_CONTENT);
         }

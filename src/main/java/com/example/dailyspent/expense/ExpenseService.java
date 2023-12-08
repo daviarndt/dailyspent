@@ -1,7 +1,8 @@
 package com.example.dailyspent.expense;
 
+import com.example.dailyspent.expense.dto.DescribeExpenseDTO;
 import com.example.dailyspent.utils.exceptions.UserNotFoundException;
-import com.example.dailyspent.expense.dto.ExpenseDTO;
+import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.user.UserModel;
 import com.example.dailyspent.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,16 +19,17 @@ public class ExpenseService {
     @Autowired
     UserService userService;
 
-    public ExpenseModel saveExpense(ExpenseDTO expenseDTO, Long userId) {
+    public DescribeExpenseDTO saveExpense(SaveExpenseDTO saveExpenseDTO, Long userId) {
         UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
 
-        ExpenseModel expense = new ExpenseModel(expenseDTO);
+        ExpenseModel expense = new ExpenseModel(saveExpenseDTO);
         expense.setUser(user);
-        return expenseRepository.save(expense);
+        expense = expenseRepository.save(expense);
+        return new DescribeExpenseDTO(expense);
     }
 
-    public Page<ExpenseModel> getExpensesByUser(Long userId, Pageable pageable) {
+    public Page<DescribeExpenseDTO> getExpensesByUser(Long userId, Pageable pageable) {
         UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
-        return expenseRepository.findAllByUserUserId(userId, pageable);
+        return expenseRepository.findAllByUserUserId(userId, pageable).map(DescribeExpenseDTO::new);
     }
 }
