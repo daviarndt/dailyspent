@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record DescribeExpenseDTO(
-        Long id,
+        Long expenseId,
         BigDecimal amount,
         String category,
         LocalDateTime createdDate,

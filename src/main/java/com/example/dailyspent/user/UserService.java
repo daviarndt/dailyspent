@@ -1,10 +1,16 @@
 package com.example.dailyspent.user;
 
+import com.example.dailyspent.phone.PhoneModel;
+import com.example.dailyspent.phone.dto.SavePhoneDTO;
+import com.example.dailyspent.user.dto.DescribeUserDTO;
+import com.example.dailyspent.user.dto.SaveUserDTO;
 import com.example.dailyspent.utils.exceptions.UserAlreadyExistsException;
 import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,32 +19,37 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    public UserModel saveUser(UserModel user, String method) {
-        System.out.println("AQUI TÁ O MÉTODO: " + method);
-        if (!method.equals("PUT")) {
-            if (userExistsByEmail(user.getEmail())) {
-                throw new UserAlreadyExistsException();
-            }
+    public DescribeUserDTO saveUser(SaveUserDTO saveUserDTO) {
+        if (userExistsByEmail(saveUserDTO.email())) {
+            throw new UserAlreadyExistsException();
         }
-        return userRepository.save(user);
+        UserModel userModel = new UserModel(saveUserDTO);
+        if (!saveUserDTO.phoneNumbers().isEmpty()) {
+            List<PhoneModel> phones = new ArrayList<>();
+            for (SavePhoneDTO phoneDTO : saveUserDTO.phoneNumbers()) {
+                PhoneModel phoneModel = new PhoneModel(phoneDTO);
+                phoneModel.setUser(userModel);
+                phones.add(phoneModel);
+            }
+            userModel.setPhoneNumbers(phones);
+        }
+        return new DescribeUserDTO(userRepository.save(userModel));
     }
 
     public Optional<UserModel> getUserById(Long userId) {
         return userRepository.findById(userId);
     }
 
-    public UserModel deactivateUser(Long userId, String method) {
+    public DescribeUserDTO deactivateUser(Long userId) {
         UserModel user = getUserById(userId).orElseThrow(UserNotFoundException::new);
             user.setActive(false);
-            saveUser(user, method);
-            return user;
+            return new DescribeUserDTO(userRepository.save(user));
     }
 
-    public UserModel activateUser(Long userId, String method) {
+    public DescribeUserDTO activateUser(Long userId) {
         UserModel user = getUserById(userId).orElseThrow(UserNotFoundException::new);
         user.setActive(true);
-        saveUser(user, method);
-        return user;
+        return new DescribeUserDTO(userRepository.save(user));
     }
 
     public boolean userExistsByEmail(String email) {

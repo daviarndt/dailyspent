@@ -2,12 +2,15 @@ package com.example.dailyspent.user;
 
 import com.example.dailyspent.expense.ExpenseModel;
 import com.example.dailyspent.phone.PhoneModel;
+import com.example.dailyspent.user.dto.SaveUserDTO;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.EqualsAndHashCode;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Table(name = "user")
@@ -36,14 +39,21 @@ public class UserModel {
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Valid
-    private List<PhoneModel> phoneNumbers;
+    private List<PhoneModel> phoneNumbers = new ArrayList<>();
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @Valid
-    private List<ExpenseModel> expenses;
+    private List<ExpenseModel> expenses = new ArrayList<>();
 
     public UserModel() {}
+
+    public UserModel(SaveUserDTO saveUserDTO) {
+        this.firstName = saveUserDTO.firstName();
+        this.lastName = saveUserDTO.lastName();
+        this.email = saveUserDTO.email();
+        this.phoneNumbers = saveUserDTO.phoneNumbers().stream().map(PhoneModel::new).toList();
+    }
 
     public Long getUserId() {
         return userId;

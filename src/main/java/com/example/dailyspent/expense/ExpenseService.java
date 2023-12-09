@@ -1,6 +1,8 @@
 package com.example.dailyspent.expense;
 
 import com.example.dailyspent.expense.dto.DescribeExpenseDTO;
+import com.example.dailyspent.user.dto.DescribeUserDTO;
+import com.example.dailyspent.utils.exceptions.ExpenseNotFoundException;
 import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.user.UserModel;
@@ -31,5 +33,13 @@ public class ExpenseService {
     public Page<DescribeExpenseDTO> getExpensesByUser(Long userId, Pageable pageable) {
         UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
         return expenseRepository.findAllByUserUserId(userId, pageable).map(DescribeExpenseDTO::new);
+    }
+
+    public DescribeUserDTO deleteExpenseById(Long expenseId) {
+        ExpenseModel expenseModel = expenseRepository.findById(expenseId).orElseThrow(ExpenseNotFoundException::new);
+        UserModel userModel = userService.getUserById(expenseModel.getUser().getUserId()).orElseThrow(UserNotFoundException::new);
+        userModel.getExpenses().remove(expenseModel);
+        expenseRepository.deleteById(expenseId);
+        return new DescribeUserDTO(userModel);
     }
 }

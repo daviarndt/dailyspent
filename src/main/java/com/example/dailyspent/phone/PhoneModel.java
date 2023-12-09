@@ -1,5 +1,6 @@
 package com.example.dailyspent.phone;
 
+import com.example.dailyspent.phone.dto.SavePhoneDTO;
 import com.example.dailyspent.user.UserModel;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -30,6 +31,11 @@ public class PhoneModel {
     private UserModel user;
 
     public PhoneModel() {
+    }
+
+    public PhoneModel(SavePhoneDTO savePhoneDTO) {
+        this.countryCode = savePhoneDTO.countryCode();
+        this.phoneNumber = savePhoneDTO.phoneNumber();
     }
 
     public Long getPhoneId() {

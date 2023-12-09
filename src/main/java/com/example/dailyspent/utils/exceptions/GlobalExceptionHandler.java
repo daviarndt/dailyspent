@@ -28,4 +28,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiResponse> handlePhoneNotFoundException(PhoneNotFoundException ex) {
         return new ResponseEntity<>(ApiResponse.exception(ex.getMessage()), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(ExpenseNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleExpenseNotFoundException(ExpenseNotFoundException ex) {
+        return new ResponseEntity<>(ApiResponse.exception(ex.getMessage()), HttpStatus.NOT_FOUND);
+    }
 }

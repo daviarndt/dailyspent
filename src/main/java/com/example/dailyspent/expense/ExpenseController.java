@@ -1,6 +1,7 @@
 package com.example.dailyspent.expense;
 
 import com.example.dailyspent.expense.dto.DescribeExpenseDTO;
+import com.example.dailyspent.user.dto.DescribeUserDTO;
 import com.example.dailyspent.utils.exceptions.IdIsIllegalException;
 import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.utils.ApiResponse;
@@ -41,5 +42,15 @@ public class ExpenseController {
             return new ResponseEntity<>(ApiResponse.noContent(), HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(ApiResponse.success(expenses), HttpStatus.OK);
+    }
+
+    @Transactional
+    @DeleteMapping(value = "/{expenseId}")
+    public ResponseEntity<ApiResponse<DescribeUserDTO>> deleteExpenseById(@PathVariable Long expenseId) {
+        if (expenseId.toString().isBlank() && expenseId <= 0) {
+            throw new IdIsIllegalException();
+        }
+        DescribeUserDTO describeUserDTO = expenseService.deleteExpenseById(expenseId);
+        return new ResponseEntity<>(ApiResponse.success(describeUserDTO), HttpStatus.OK);
     }
 }
