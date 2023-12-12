@@ -7,6 +7,7 @@ import com.example.dailyspent.user.dto.SaveUserDTO;
 import com.example.dailyspent.utils.exceptions.UserAlreadyExistsException;
 import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ public class UserService {
     }
 
     public boolean userExistsByEmail(String email) {
-        Optional<UserModel> user = userRepository.findByEmail(email);
+        Optional<UserDetails> user = userRepository.findByEmail(email);
         return user.isPresent() ? true : false;
     }
 }

@@ -1,7 +1,6 @@
-package com.example.dailyspent.utils;
+package com.example.dailyspent.utils.security;
 
 import com.example.dailyspent.user.UserRepository;
-import com.example.dailyspent.utils.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,6 +15,6 @@ public class AuthenticationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserDetails(username);
+        return userRepository.findByEmail(username).get();
     }
 }
