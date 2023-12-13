@@ -8,8 +8,10 @@ import jakarta.persistence.*;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
@@ -36,6 +38,11 @@ public class UserModel implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
+    @NotBlank(message = "Password is mandatory")
+    @Size(min = 8)
+    @Column(name = "password", nullable = false)
+    private String password;
+
     @Column(name = "is_active", nullable = false)
     private boolean isActive = true;
 
@@ -55,6 +62,7 @@ public class UserModel implements UserDetails {
         this.firstName = saveUserDTO.firstName();
         this.lastName = saveUserDTO.lastName();
         this.email = saveUserDTO.email();
+        this.password = saveUserDTO.password();
         this.phoneNumbers = saveUserDTO.phoneNumbers().stream().map(PhoneModel::new).toList();
     }
 
@@ -116,36 +124,36 @@ public class UserModel implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return email;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
