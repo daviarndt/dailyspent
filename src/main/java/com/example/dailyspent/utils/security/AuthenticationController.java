@@ -1,7 +1,9 @@
 package com.example.dailyspent.utils.security;
 
+import com.example.dailyspent.user.UserModel;
 import com.example.dailyspent.utils.ApiResponse;
 import com.example.dailyspent.utils.security.dto.RequestAuthenticationDTO;
+import com.example.dailyspent.utils.security.dto.ResponseAuthenticationDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,19 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse> login(@RequestBody @Valid RequestAuthenticationDTO data) {
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(data.login(), data.password());
-        Authentication authentication = authenticationManager.authenticate(token);
+    @Autowired
+    private TokenService tokenService;
 
-        return new ResponseEntity<>(ApiResponse.success(null), HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<ApiResponse<ResponseAuthenticationDTO>> login(@RequestBody @Valid RequestAuthenticationDTO data) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(data.login(), data.password());
+        Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+        String tokenJWT = tokenService.generateToken((UserModel) authentication.getPrincipal());
+        return new ResponseEntity<>(ApiResponse.success(
+                new ResponseAuthenticationDTO(
+                        tokenJWT)
+                ),
+                HttpStatus.OK);
     }
 }
