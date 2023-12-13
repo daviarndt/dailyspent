@@ -10,9 +10,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +25,7 @@ import java.util.List;
 @Entity(name = "user")
 @EqualsAndHashCode(of = "userId")
 public class UserModel implements UserDetails {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
@@ -62,7 +66,7 @@ public class UserModel implements UserDetails {
         this.firstName = saveUserDTO.firstName();
         this.lastName = saveUserDTO.lastName();
         this.email = saveUserDTO.email();
-        this.password = saveUserDTO.password();
+        this.password = new BCryptPasswordEncoder().encode(saveUserDTO.password());
         this.phoneNumbers = saveUserDTO.phoneNumbers().stream().map(PhoneModel::new).toList();
     }
 
