@@ -21,8 +21,8 @@ public class ExpenseService {
     @Autowired
     UserService userService;
 
-    public DescribeExpenseDTO saveExpense(SaveExpenseDTO saveExpenseDTO, Long userId) {
-        UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
+    public DescribeExpenseDTO saveExpense(SaveExpenseDTO saveExpenseDTO, String userEmail) {
+        UserModel user = userService.getUserByEmail(userEmail);
 
         ExpenseModel expense = new ExpenseModel(saveExpenseDTO);
         expense.setUser(user);
@@ -30,14 +30,19 @@ public class ExpenseService {
         return new DescribeExpenseDTO(expense);
     }
 
-    public Page<DescribeExpenseDTO> getExpensesByUser(Long userId, Pageable pageable) {
-        UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
-        return expenseRepository.findAllByUserUserId(userId, pageable).map(DescribeExpenseDTO::new);
+    public Page<DescribeExpenseDTO> getExpensesByUser(Pageable pageable, String userEmail) {
+        UserModel user = userService.getUserByEmail(userEmail);
+        return expenseRepository.findAllByUserUserId(user.getUserId(), pageable).map(DescribeExpenseDTO::new);
     }
 
-    public DescribeUserDTO deleteExpenseById(Long expenseId) {
+    public DescribeUserDTO deleteExpenseById(Long expenseId, String userEmail) {
+        UserModel userModel = userService.getUserByEmail(userEmail);
         ExpenseModel expenseModel = expenseRepository.findById(expenseId).orElseThrow(ExpenseNotFoundException::new);
-        UserModel userModel = userService.getUserById(expenseModel.getUser().getUserId()).orElseThrow(UserNotFoundException::new);
+
+        if (userModel.getUserId() != expenseModel.getUser().getUserId()) {
+            throw new ExpenseNotFoundException("The expense wasn't found by the User logged");
+        }
+
         userModel.getExpenses().remove(expenseModel);
         expenseRepository.deleteById(expenseId);
         return new DescribeUserDTO(userModel);

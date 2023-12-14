@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("expense")
 public class ExpenseController {
@@ -23,21 +25,15 @@ public class ExpenseController {
     ExpenseService expenseService;
 
     @Transactional
-    @PostMapping(value = "/{userId}")
-    public ResponseEntity<ApiResponse<DescribeExpenseDTO>> saveExpense(@Valid @RequestBody SaveExpenseDTO saveExpenseDTO, @PathVariable Long userId) {
-        if (userId.toString().isBlank() && userId <= 0) {
-            throw new IdIsIllegalException();
-        }
-        DescribeExpenseDTO expense = expenseService.saveExpense(saveExpenseDTO, userId);
+    @PostMapping()
+    public ResponseEntity<ApiResponse<DescribeExpenseDTO>> saveExpense(@Valid @RequestBody SaveExpenseDTO saveExpenseDTO, Principal principal) {
+        DescribeExpenseDTO expense = expenseService.saveExpense(saveExpenseDTO, principal.getName());
         return new ResponseEntity<>(ApiResponse.success(expense), HttpStatus.CREATED);
     }
 
-    @GetMapping(value = "/{userId}")
-    public ResponseEntity<ApiResponse<Page<DescribeExpenseDTO>>> getExpensesByUser(@PathVariable Long userId, @PageableDefault(size = 25) Pageable pageable) {
-        if (userId.toString().isBlank() && userId <= 0) {
-            throw new IdIsIllegalException();
-        }
-        Page<DescribeExpenseDTO> expenses = expenseService.getExpensesByUser(userId, pageable);
+    @GetMapping()
+    public ResponseEntity<ApiResponse<Page<DescribeExpenseDTO>>> getExpenses(@PageableDefault(size = 25) Pageable pageable, Principal principal) {
+        Page<DescribeExpenseDTO> expenses = expenseService.getExpensesByUser(pageable, principal.getName());
         if (expenses.isEmpty()) {
             return new ResponseEntity<>(ApiResponse.noContent(), HttpStatus.NO_CONTENT);
         }
@@ -46,11 +42,11 @@ public class ExpenseController {
 
     @Transactional
     @DeleteMapping(value = "/{expenseId}")
-    public ResponseEntity<ApiResponse<DescribeUserDTO>> deleteExpenseById(@PathVariable Long expenseId) {
-        if (expenseId.toString().isBlank() && expenseId <= 0) {
+    public ResponseEntity<ApiResponse<DescribeUserDTO>> deleteExpenseById(@PathVariable Long expenseId, Principal principal) {
+        if (expenseId.toString().isBlank() || expenseId <= 0) {
             throw new IdIsIllegalException();
         }
-        DescribeUserDTO describeUserDTO = expenseService.deleteExpenseById(expenseId);
+        DescribeUserDTO describeUserDTO = expenseService.deleteExpenseById(expenseId, principal.getName());
         return new ResponseEntity<>(ApiResponse.success(describeUserDTO), HttpStatus.OK);
     }
 }

@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("phone")
 public class PhoneController {
@@ -20,22 +22,19 @@ public class PhoneController {
     PhoneService phoneService;
 
     @Transactional
-    @PostMapping(value = "/{userId}")
-    public ResponseEntity<ApiResponse<DescribePhoneDTO>> savePhone(@Valid @RequestBody SavePhoneDTO savePhoneDTO, @PathVariable Long userId) {
-        if (userId.toString().isBlank() && userId <= 0) {
-            throw new IdIsIllegalException();
-        }
-        DescribePhoneDTO describePhoneDTO = phoneService.savePhone(savePhoneDTO, userId);
+    @PostMapping()
+    public ResponseEntity<ApiResponse<DescribePhoneDTO>> savePhone(@Valid @RequestBody SavePhoneDTO savePhoneDTO, Principal principal) {
+        DescribePhoneDTO describePhoneDTO = phoneService.savePhone(savePhoneDTO, principal.getName());
         return new ResponseEntity<>(ApiResponse.success(describePhoneDTO), HttpStatus.OK);
     }
 
     @Transactional
     @DeleteMapping(value = "/{phoneId}")
-    public ResponseEntity<ApiResponse<DescribeUserDTO>> deletePhoneById(@PathVariable Long phoneId) {
-        if (phoneId.toString().isBlank() && phoneId <= 0) {
+    public ResponseEntity<ApiResponse<DescribeUserDTO>> deletePhoneById(@PathVariable Long phoneId, Principal principal) {
+        if (phoneId.toString().isBlank() || phoneId <= 0) {
             throw new IdIsIllegalException();
         }
-        DescribeUserDTO describeUserDTO = phoneService.deletePhoneById(phoneId);
+        DescribeUserDTO describeUserDTO = phoneService.deletePhoneById(phoneId, principal.getName());
         return new ResponseEntity<>(ApiResponse.success(describeUserDTO), HttpStatus.OK);
     }
 }

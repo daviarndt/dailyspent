@@ -21,8 +21,8 @@ public class PhoneService {
     @Autowired
     UserService userService;
 
-    public DescribePhoneDTO savePhone(SavePhoneDTO savePhoneDTO, Long userId) {
-        UserModel user = userService.getUserById(userId).orElseThrow(UserNotFoundException::new);
+    public DescribePhoneDTO savePhone(SavePhoneDTO savePhoneDTO, String email) {
+        UserModel user = userService.getUserByEmail(email);
         PhoneModel phoneModel = new PhoneModel(savePhoneDTO);
         phoneModel.setUser(user);
         return new DescribePhoneDTO(phoneRepository.save(phoneModel));
@@ -32,12 +32,16 @@ public class PhoneService {
         return phoneRepository.findById(phoneId);
     }
 
-    public DescribeUserDTO deletePhoneById(Long phoneId) {
+    public DescribeUserDTO deletePhoneById(Long phoneId, String userEmail) {
+        UserModel userModel = userService.getUserByEmail(userEmail);
         PhoneModel phone = getPhoneById(phoneId).orElseThrow(PhoneNotFoundException::new);
-        UserModel userModel = userService.getUserById(phone.getUser().getUserId()).orElseThrow(UserNotFoundException::new);
+
+        if (userModel.getUserId() != phone.getUser().getUserId()) {
+            throw new PhoneNotFoundException("The phone wasn't found by the User logged");
+        }
+
         userModel.getPhoneNumbers().remove(phone);
         phoneRepository.deleteById(phoneId);
-        DescribeUserDTO describeUserDTO = new DescribeUserDTO(userModel);
-        return describeUserDTO;
+        return new DescribeUserDTO(userModel);
     }
 }

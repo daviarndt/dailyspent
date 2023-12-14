@@ -3,13 +3,14 @@ package com.example.dailyspent.user;
 import com.example.dailyspent.user.dto.DescribeUserDTO;
 import com.example.dailyspent.user.dto.SaveUserDTO;
 import com.example.dailyspent.utils.ApiResponse;
-import com.example.dailyspent.utils.exceptions.IdIsIllegalException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RestController
 @RequestMapping("user")
@@ -26,22 +27,16 @@ public class UserController {
     }
 
     @Transactional
-    @PutMapping(value = "/deactivate/{userId}")
-    public ResponseEntity<ApiResponse<DescribeUserDTO>> deactivateUser(@PathVariable Long userId) {
-        if (userId.toString().isBlank() && userId <= 0) {
-            throw new IdIsIllegalException();
-        }
-        DescribeUserDTO user = userService.deactivateUser(userId);
+    @PutMapping(value = "/deactivate")
+    public ResponseEntity<ApiResponse<DescribeUserDTO>> deactivateUser(Principal principal) {
+        DescribeUserDTO user = userService.deactivateUser(principal.getName());
         return new ResponseEntity<>(ApiResponse.success(user), HttpStatus.OK);
     }
 
     @Transactional
-    @PutMapping(value = "/activate/{userId}")
-    public ResponseEntity<ApiResponse<DescribeUserDTO>> activateUser(@PathVariable Long userId) {
-        if (userId.toString().isBlank() && userId <= 0) {
-            throw new IdIsIllegalException();
-        }
-        DescribeUserDTO user = userService.activateUser(userId);
+    @PutMapping(value = "/activate")
+    public ResponseEntity<ApiResponse<DescribeUserDTO>> activateUser(Principal principal) {
+        DescribeUserDTO user = userService.activateUser(principal.getName());
         return new ResponseEntity<>(ApiResponse.success(user), HttpStatus.OK);
     }
 }

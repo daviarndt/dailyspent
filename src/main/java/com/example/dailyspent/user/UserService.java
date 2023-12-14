@@ -41,14 +41,18 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
-    public DescribeUserDTO deactivateUser(Long userId) {
-        UserModel user = getUserById(userId).orElseThrow(UserNotFoundException::new);
+    public UserModel getUserByEmail(String email) {
+        return userRepository.findByEmailNative(email).orElseThrow(UserNotFoundException::new);
+    }
+
+    public DescribeUserDTO deactivateUser(String email) {
+        UserModel user = getUserByEmail(email);
             user.setActive(false);
             return new DescribeUserDTO(userRepository.save(user));
     }
 
-    public DescribeUserDTO activateUser(Long userId) {
-        UserModel user = getUserById(userId).orElseThrow(UserNotFoundException::new);
+    public DescribeUserDTO activateUser(String email) {
+        UserModel user = getUserByEmail(email);
         user.setActive(true);
         return new DescribeUserDTO(userRepository.save(user));
     }
