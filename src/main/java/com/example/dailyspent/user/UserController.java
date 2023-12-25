@@ -3,6 +3,7 @@ package com.example.dailyspent.user;
 import com.example.dailyspent.user.dto.DescribeUserDTO;
 import com.example.dailyspent.user.dto.SaveUserDTO;
 import com.example.dailyspent.utils.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,7 @@ public class UserController {
 
     @Transactional
     @PutMapping(value = "/deactivate")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<ApiResponse<DescribeUserDTO>> deactivateUser(Principal principal) {
         DescribeUserDTO user = userService.deactivateUser(principal.getName());
         return new ResponseEntity<>(ApiResponse.success(user), HttpStatus.OK);
@@ -35,6 +37,7 @@ public class UserController {
 
     @Transactional
     @PutMapping(value = "/activate")
+    @SecurityRequirement(name = "bearer-key")
     public ResponseEntity<ApiResponse<DescribeUserDTO>> activateUser(Principal principal) {
         DescribeUserDTO user = userService.activateUser(principal.getName());
         return new ResponseEntity<>(ApiResponse.success(user), HttpStatus.OK);

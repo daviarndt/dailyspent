@@ -5,6 +5,7 @@ import com.example.dailyspent.phone.dto.SavePhoneDTO;
 import com.example.dailyspent.user.dto.DescribeUserDTO;
 import com.example.dailyspent.utils.ApiResponse;
 import com.example.dailyspent.utils.exceptions.IdIsIllegalException;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("phone")
+@SecurityRequirement(name = "bearer-key")
 public class PhoneController {
 
     @Autowired

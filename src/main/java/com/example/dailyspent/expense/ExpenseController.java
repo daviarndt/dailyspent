@@ -5,6 +5,7 @@ import com.example.dailyspent.user.dto.DescribeUserDTO;
 import com.example.dailyspent.utils.exceptions.IdIsIllegalException;
 import com.example.dailyspent.expense.dto.SaveExpenseDTO;
 import com.example.dailyspent.utils.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("expense")
+@SecurityRequirement(name = "bearer-key")
 public class ExpenseController {
 
     @Autowired
